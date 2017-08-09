@@ -1,8 +1,8 @@
 name: inverse
 layout: true
-class: center, middle, inverse
+class: left, middle, inverse
 ---
-# foldについて
+# fold沼について
 [@qtamaki](https://twitter.com/qtamaki)
 
 [株式会社チェンジ・ザ・ワールド](http://ctws.jp)
@@ -20,10 +20,10 @@ class: center, middle, inverse
 ---
 ## 定義
 
-foldメソッドは、**だいたい**ここで定義されている。
+foldメソッドは、だいたいここで定義されている。
 
 * [scala.collection.TraversableOnce](http://www.scala-lang.org/api/2.12.3/scala/collection/TraversableOnce.html)
-  * [scala.collection.GenTraversableOnce](http://www.scala-lang.org/api/2.12.3/scala/collection/GenTraversableOnce.html)
+  * → [scala.collection.GenTraversableOnce](http://www.scala-lang.org/api/2.12.3/scala/collection/GenTraversableOnce.html)
 
 シグニチャ
 
@@ -69,7 +69,7 @@ def foldLeft[B](z: B)(op: (B, A) ⇒ B): B
 
 ### 違い
 
-* どちらから畳み込むのか未定義
+* どちらから畳み込むのか未定義([たぶんLeft](https://github.com/scala/scala/blob/v2.12.3/src/library/scala/collection/TraversableOnce.scala#L212))
 * 型を変更できない(A->B)
 
 ---
@@ -94,12 +94,14 @@ foldでは出来ない！
 User.find(1).fold("unknown user"){u => u.userName}
 ```
 
-Option/Try/Eitherという、失敗系の値コンテナから値をスムーズに取り出すのに使います。
+Option/Try/Eitherという、失敗系のコンテナから値をスムーズに取り出すのに使います。
+
+※ とある方面ではコンテナを失敗系・状態系などと分けたりします。なんと、Listも失敗系に分類されるので、今回登場するコンテナは全て失敗系です。ズコー。
 
 ---
 ## Option map f getOrElse isEmpty
 
-scaladocには下記のような注釈があります。
+[scaladoc](http://www.scala-lang.org/api/2.12.3/scala/Option.html)には下記のような注釈があります。
 
 ```
 scala.Option map f getOrElse isEmpty
@@ -132,10 +134,10 @@ User.find(1).map(u => u.userName).getOrElse("unknown user")
 失敗系の計算を連結するには、map/flatMapが定番ですが、最終的に値が取り出せません。
 
 ```
-User.find(1).map(u => u.userName) // Some("tamaki") or None
+find(x).map(hoge).map(fuga).map(foo).map(bar)... // どこまでもOption型の計算
 ```
 
-そのための方法の１つがfoldという事になります。
+値を取り出すための方法の１つがfoldという事になります。
 
 foldの場合、先にデフォルトの値を書き、getOrElseはmapの後に書くことになります。単に好みの問題ですが、(u => u.userName)の部分は、実際には数行になることが多いので、ソースの見通し上foldが好まれるのだと思います。
 

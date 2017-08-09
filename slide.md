@@ -3,8 +3,8 @@ layout: true
 class: center, middle, inverse
 ---
 # foldについて
+[@qtamaki](https://twitter.com/qtamaki)
 
----
 ## Scalaのfold
 
 [scala.collection.immutable.List](http://www.scala-lang.org/api/2.12.3/scala/collection/immutable/List.html) なんかについているメソッド
@@ -42,10 +42,12 @@ $('.entity a').map((i,n) => console.log(n.innerText))
 
 以下のクラスは、GenTraversableOnceを継承しておらず、独自にfoldを定義している。
 
-* [Future(object)](http://www.scala-lang.org/api/2.12.3/scala/concurrent/Future#.html)
 * [Either](http://www.scala-lang.org/api/2.12.3/scala/util/Either.html)
 * [Option](http://www.scala-lang.org/api/2.12.3/scala/Option.html)
 * [Try](http://www.scala-lang.org/api/2.12.3/scala/util/Try.html)
+* [Future(object)](http://www.scala-lang.org/api/2.12.3/scala/concurrent/Future#.html)(Deprecated)
+
+※FutureのfoldはDeprecatedで、objectに定義されていて、TraversableOnce[Future[T]]を畳み込むだけなので無視
 
 ---
 ## TraversableOnce.fold
@@ -59,7 +61,7 @@ def fold[A1 >: (K, V)](z: A1)(op: (A1, A1) ⇒ A1): A1
 なお、foldLeftのシグニチャ。
 
 ```
-def foldLeft[B](z: B)(op: (B, A) ⇒ B): B 
+def foldLeft[B](z: B)(op: (B, A) ⇒ B): B
 ```
 
 ### 違い
@@ -89,7 +91,7 @@ foldでは出来ない！
 User.find(1).fold("unknown user"){u => u.userName}
 ```
 
-Option/Try/Either/Futureという、失敗系の値コンテナから値をスムーズに取り出すのに使います。
+Option/Try/Eitherという、失敗系の値コンテナから値をスムーズに取り出すのに使います。
 
 ---
 ## Option map f getOrElse isEmpty
@@ -111,3 +113,79 @@ Option.map(f).getOrElse(isEmpty)
 
 mapメソッドは、AからBへコンテナの値を変換するメソッドです。
 
+getOrElseは、OptionがNoneだった場合に返す値を定義しています。
+
+---
+先程の例で言うと、これでも問題ないということです。
+
+```
+User.find(1).fold("unknown user"){u => u.userName}
+↓
+User.find(1).map(u => u.userName).getOrElse("unknown user")
+```
+
+失敗する可能性のある計算には、OptionやEither, Tryなんかを使いますが、最終的には別の型(Resultとか)で返すというパターンになります。
+
+失敗系の計算を連結するには、map/flatMapが定番ですが、最終的に値が取り出せません。
+
+```
+User.find(1).map(u => u.userName) // Some("tamaki") or None
+```
+
+そのための方法の１つがfoldという事になります。
+
+foldの場合、先にデフォルトの値を書き、getOrElseはmapの後に書くことになります。単に好みの問題ですが、(u => u.userName)の部分は、実際には数行になることが多いので、ソースの見通し上foldが好まれるのだと思います。
+
+---
+## Either.fold
+
+Eitherのfoldは、結果がLeftだった時の処理、Rightだった時の処理と2つの関数を取ります。
+
+```
+def fold[C](fa: (A) ⇒ C, fb: (B) ⇒ C): C
+```
+
+正直、matchで書くのと大差ないので、matchでいいんじゃ？
+
+```
+hoge match {
+  case Left(x) => ...
+  case Right(x) => ...
+}
+```
+
+---
+## Try.fold
+
+Tryのfoldは、結果がFailureだった時の処理、Successだった時の処理と２つの関数を取ります。
+
+```
+def fold[U](fa: (Throwable) ⇒ U, fb: (T) ⇒ U): U
+```
+
+正直、match(ry
+
+---
+## まとめると
+
+* Scalaのfoldは、TraversableOnce系とそれ以外に別れる
+* TraversableOnce系のfoldは何故か型が変えられない(foldLeft/foldRightが便利)
+* それ以外のfoldは、失敗時と成功時の値や処理を振り分けつつ最終的な値を取り出すのに便利
+  * getOrElseやmatchを使うかは好み(だと思う)
+
+---
+## おまけ
+
+Haskellの場合、foldは、Foldableという型クラスになっている。
+
+```
+class Foldable (t :: * -> *) where
+  fold :: Monoid m => t m -> m
+  foldMap :: Monoid m => (a -> m) -> t a -> m
+  foldr :: (a -> b -> b) -> b -> t a -> b
+  foldl :: (b -> a -> b) -> b -> t a -> b
+```
+
+コンテナの中身がMonoidである必要があり、mappendで自動的に畳み込まれる。
+
+Scalaのfoldとも違う動きなので要注意だった。

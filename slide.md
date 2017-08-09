@@ -2,35 +2,35 @@ name: inverse
 layout: true
 class: center, middle, inverse
 ---
-# ƒ^ƒCƒgƒ‹
-‚Pƒy[ƒW–Ú
+# ã‚¿ã‚¤ãƒˆãƒ«
+ï¼‘ãƒšãƒ¼ã‚¸ç›®
 ---
 layout:false
-## ƒXƒ‰ƒCƒh‚P
-### ƒXƒ‰ƒCƒh‚P
-‚Qƒy[ƒW–Ú
+## ã‚¹ãƒ©ã‚¤ãƒ‰ï¼‘
+### ã‚¹ãƒ©ã‚¤ãƒ‰ï¼‘
+ï¼’ãƒšãƒ¼ã‚¸ç›®
 
-* ƒR[ƒh‚ð‘‚­
+* ã‚³ãƒ¼ãƒ‰ã‚’æ›¸ã
 ```
-// ƒR[ƒh‚ð‘‚­
+// ã‚³ãƒ¼ãƒ‰ã‚’æ›¸ã
 abc
 ```
 ---
-## ƒXƒ‰ƒCƒh‚Q
-### ƒXƒ‰ƒCƒh‚Q
-‚Rƒy[ƒW–Ú
+## ã‚¹ãƒ©ã‚¤ãƒ‰ï¼’
+### ã‚¹ãƒ©ã‚¤ãƒ‰ï¼’
+ï¼“ãƒšãƒ¼ã‚¸ç›®
 .left-column[
-* ¶‚É‘‚­
+* å·¦ã«æ›¸ã
 ]
 .right-column[
-* ‰E‚É‘‚­
+* å³ã«æ›¸ã
 ]
 
 ---
-## ƒXƒ‰ƒCƒh‚R
-### ƒXƒ‰ƒCƒh‚R
-‚Sƒy[ƒW–Ú
+## ã‚¹ãƒ©ã‚¤ãƒ‰ï¼“
+### ã‚¹ãƒ©ã‚¤ãƒ‰ï¼“
+ï¼”ãƒšãƒ¼ã‚¸ç›®
 
-* ƒŠƒ“ƒN‚ð“\‚é
+* ãƒªãƒ³ã‚¯ã‚’è²¼ã‚‹
 
 __[Google](https://www.google.co.jp/)__

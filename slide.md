@@ -81,7 +81,7 @@ def foldLeft[B](z: B)(op: (B, A) ⇒ B): B
 List(1,2,3,4).foldLeft(List.empty[Int])((a,b) => b::a)
 ```
 
-foldでは出来ない！
+foldでは出来ない！(List[Int]の場合、Intの処理しか出来ない)
 
 結論: foldLeft/foldRightの方が便利。
 

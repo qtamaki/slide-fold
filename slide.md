@@ -5,6 +5,9 @@ class: center, middle, inverse
 # foldについて
 [@qtamaki](https://twitter.com/qtamaki)
 
+[株式会社チェンジ・ザ・ワールド](http://ctws.jp)
+
+---
 ## Scalaのfold
 
 [scala.collection.immutable.List](http://www.scala-lang.org/api/2.12.3/scala/collection/immutable/List.html) なんかについているメソッド

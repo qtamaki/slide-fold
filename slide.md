@@ -104,7 +104,7 @@ Option/Try/Eitherという、失敗系のコンテナから値をスムーズに
 [scaladoc](http://www.scala-lang.org/api/2.12.3/scala/Option.html)には下記のような注釈があります。
 
 ```
-scala.Option map f getOrElse isEmpty
+This is equivalent to scala.Option map f getOrElse isEmpty
 ```
 これと同義だということです。
 

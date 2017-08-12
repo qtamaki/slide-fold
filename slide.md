@@ -69,8 +69,8 @@ def foldLeft[B](z: B)(op: (B, A) ⇒ B): B
 
 ### 違い
 
-* どちらから畳み込むのか未定義([たぶんLeft](https://github.com/scala/scala/blob/v2.12.3/src/library/scala/collection/TraversableOnce.scala#L212))
-* 型を変更できない(A->B)
+* foldは、並列計算を意識しており、結合則を満たす必要がある(a->b->cを(a->b)->cでもa->(b->c)でも計算できる必要がある)
+* その為、型を変更できない(A->B)
 
 ---
 ## 型を変更できない(A->B)
@@ -83,7 +83,7 @@ List(1,2,3,4).foldLeft(List.empty[Int])((a,b) => b::a)
 
 foldでは出来ない！(List[Int]の場合、Intの処理しか出来ない)
 
-結論: foldLeft/foldRightの方が便利。
+結論: foldLeft/foldRightの方が柔軟性が高く便利(であるが、並列化可能なため、foldの要求を満たす計算はfoldで実装しておいたほうが良い)
 
 ---
 ## Option.fold
@@ -174,7 +174,8 @@ def fold[U](fa: (Throwable) ⇒ U, fb: (T) ⇒ U): U
 ## まとめると
 
 * Scalaのfoldは、TraversableOnce系とそれ以外に別れる
-* TraversableOnce系のfoldは何故か型が変えられない(foldLeft/foldRightが便利)
+* TraversableOnce系のfoldは結合則を満たす必要があるが、並列化可能
+  * そのため計算結果を別の型に出来ない。foldLeft/foldRightの方が柔軟性が高いが用途に応じて選択すると良い
 * それ以外のfoldは、失敗時と成功時の値や処理を振り分けつつ最終的な値を取り出すのに便利
   * getOrElseやmatchを使うかは好み(だと思う)
 
@@ -193,4 +194,4 @@ class Foldable (t :: * -> *) where
 
 コンテナの中身がMonoidである必要があり、mappendで自動的に畳み込まれる。
 
-Scalaのfoldとも違う動きなので要注意だった。
+Scalaのfoldと同じくMonoidである必要がある(つまり結合則を満たす)。
